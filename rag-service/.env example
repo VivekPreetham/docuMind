@@ -1,0 +1,9 @@
+GOOGLE_API_KEY="your api key"
+
+FAISS_INDEX_DIR=./faiss_indexes
+
+CHUNK_SIZE=1000
+
+CHUNK_OVERLAP=200
+
+TOP_K_RESULTS=5
