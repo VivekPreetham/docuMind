@@ -1,0 +1,28 @@
+from fastapi import APIRouter
+
+from app.models.schemas import (
+    IngestRequest,
+    QueryRequest
+)
+
+from app.services.ingestion import ( ingest_document )
+
+from app.services.retrieval import ( query_document )
+
+router = APIRouter()
+
+@router.get("/health")
+def health_check():
+    return {
+        "status": "healthy"
+    }
+
+@router.post("/ingest")
+def ingest(req: IngestRequest):
+
+    result = ingest_document(
+        req.pdf_path,
+        req.question
+    )
+
+    return result

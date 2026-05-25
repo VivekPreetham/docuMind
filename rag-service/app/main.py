@@ -2,7 +2,9 @@ from fastapi import FastAPI
 
 from app.routes.rag import router
 
-app = FastAPI()
+app = FastAPI(
+    title="DocuMind RAG Service"
+)
 
 app.include_router(router)
 
