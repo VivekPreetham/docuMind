@@ -1,23 +1,24 @@
-import os 
+import os
 
-from langchain_community.vectorstores import ( FAISS )
+from langchain_community.vectorstores import FAISS
 
-from langchain_community.embeddings import ( HuggingFaceBgeEmbeddings )
+from langchain_community.embeddings import (
+    HuggingFaceEmbeddings
+)
 
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_ollama import ChatOllama
 
-from app.config import(
+from app.config import (
     FAISS_INDEX_DIR,
     TOP_K_RESULTS
 )
 
-embedding_model = HuggingFaceBgeEmbeddings(
+embedding_model = HuggingFaceEmbeddings(
     model_name="all-MiniLM-L6-v2"
 )
 
-llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
-    temperature=0.3
+llm = ChatOllama(
+    model="llama3"
 )
 
 
@@ -61,11 +62,14 @@ def build_context(docs):
         context += doc.page_content + "\n\n"
 
         sources.append({
+
             "chunkText": doc.page_content,
+
             "score": float(score)
+
         })
 
-    return context, score
+    return context, sources
 
 
 def generate_answer( context, question ):
