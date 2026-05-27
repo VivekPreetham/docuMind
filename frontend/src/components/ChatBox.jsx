@@ -27,8 +27,11 @@ export default function ChatBox({documentId}) {
         try {
             
             const response = await api.post(
-                `/chat/${documentId/message}`,
+
+                `/chat/${documentId}/message`,
+
                 { message }
+
             );
 
             const aiMessage = {

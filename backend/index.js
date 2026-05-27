@@ -33,9 +33,9 @@ app.use(
 );
 
 app.use(
-    "/api/documents",
-    require("./routes/chatRoutes")
-)
+  "/api/chat",
+  require("./routes/chatRoutes")
+);
 
 const PORT = process.env.PORT || 5000;
 

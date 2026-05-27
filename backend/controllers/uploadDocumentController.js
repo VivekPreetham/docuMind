@@ -1,86 +1,175 @@
-const Document = require("../models/Document");
+const Document = require(
+  "../models/Document"
+);
 
-const { ingestPdf, ingestPDF } = require("../services/ragService")
+const path = require("path");
 
-exports.uploadDocument = async (req, res) => {
-    
-    try {
-        
-        if(!req.file){
-            return res.status(400).json({
-                message: "No file uploaded"
-            }); 
-        }
+const {
+  ingestPDF
+} = require(
+  "../services/ragService"
+);
 
-        const file = req.file;
-        // Create MongoDB document first
-        const document = await Document.create({
-            userId: req.user.id,
-            originalName: file.originalname,
-            storedName: file.filename,
-            filePath: file.path,
-            fileSize: file.size,
-            status: "pending"
-        });
+exports.uploadDocument = async (
+  req,
+  res
+) => {
 
-        // Call FastAPI ingestion endpoint
+  try {
 
-        const result = await ingestPDF(
-            file.path,
-            document._id.toString()
-        );
+    if (!req.file) {
 
-        // Update MongoDB document
+      return res.status(400).json({
 
-        document.chunkCount = result.chunkCount;
+        message: "No file uploaded"
 
-        document.faissIndexPath = result.index_path;
+      });
 
-        document.status = "ready";
-
-        await document.save();
-
-        res.status(201).json({
-            message: "Document uploaded successfully",
-            document
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
     }
+
+    const file = req.file;
+
+    // Create MongoDB document
+
+    const document =
+      await Document.create({
+
+        userId: req.user.id,
+
+        originalName:
+          file.originalname,
+
+        storedName:
+          file.filename,
+
+        filePath:
+          file.path,
+
+        fileSize:
+          file.size,
+
+        status: "processing"
+
+      });
+
+    // Convert to absolute path
+
+    const absolutePath =
+      path.resolve(file.path);
+
+    console.log(
+      "Absolute PDF Path:",
+      absolutePath
+    );
+
+    // Call FastAPI ingestion
+
+    const result =
+      await ingestPDF(
+
+        absolutePath,
+
+        document._id.toString()
+
+      );
+
+    // Update document
+
+    document.chunkCount =
+      result.chunk_count;
+
+    document.faissIndexPath =
+      result.index_path;
+
+    document.status = "ready";
+
+    await document.save();
+
+    res.status(201).json({
+
+      message:
+        "Document uploaded successfully",
+
+      document
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Upload Error:",
+      error.response?.data || error.message
+    );
+
+    res.status(500).json({
+
+      message:
+        error.response?.data?.message ||
+        error.message
+
+    });
+
+  }
+
 };
 
-exports.getDocuments = async (req, res) => {
-    try {
-        const documents = await Document.find({
+exports.getDocuments = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const documents =
+      await Document.find({
+
         userId: req.user.id
-        });
+
+      });
 
     res.json(documents);
 
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+
+      message: error.message
+
+    });
+
+  }
+
 };
 
-exports.deleteDocument = async (req, res) => {
+exports.deleteDocument = async (
+  req,
+  res
+) => {
 
-    try {
-        
-        await Document.findByIdAndDelete(req.params.id);
+  try {
 
-        res.json({
-            message: "Document Deleted!"
-        });
+    await Document.findByIdAndDelete(
+      req.params.id
+    );
 
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-    }
-    
+    res.json({
+
+      message: "Document Deleted!"
+
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+
+      message: error.message
+
+    });
+
+  }
+
 };

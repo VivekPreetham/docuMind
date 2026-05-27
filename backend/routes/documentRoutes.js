@@ -4,8 +4,9 @@ const router = express.Router();
 
 const authMiddleware = require("../middleware/authMiddleware");
 
-const { upload } = require("../middleware/uploadMiddleware");
-
+const upload = require(
+  "../middleware/uploadMiddleware"
+);
 const {
     uploadDocument,
     getDocuments,
