@@ -10,7 +10,7 @@ const {
     uploadDocument,
     getDocuments,
     deleteDocument
-} = require("../controllers/uploadController");
+} = require("../controllers/uploadDocumentController");
 
 router.get(
     "/",
