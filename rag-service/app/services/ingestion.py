@@ -6,17 +6,19 @@ from langchain_text_splitters import( RecursiveCharacterTextSplitter )
 
 from langchain_community.vectorstores import( FAISS )
 
-from langchain_community.embeddings import( HuggingFaceEmbeddings )
-
 from app.config import (
     FAISS_INDEX_DIR,
     CHUNK_SIZE,
     CHUNK_OVERLAP
 )
 
-embedding_model = HuggingFaceEmbeddings(
-    model_name="all-MiniLM-L6-v2"
+from langchain_google_genai import (
+    GoogleGenerativeAIEmbeddings
 )
+
+embedding_model = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001"
+    )
 
 
 def extract_text_from_pdf(pdf_path):

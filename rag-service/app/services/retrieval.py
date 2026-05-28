@@ -2,19 +2,19 @@ import os
 
 from langchain_community.vectorstores import FAISS
 
-from langchain_community.embeddings import (
-    HuggingFaceEmbeddings
+from langchain_google_genai import (
+    GoogleGenerativeAIEmbeddings
 )
+
+embedding_model = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001"
+    )
 
 from langchain_groq import ChatGroq
 
 from app.config import (
     FAISS_INDEX_DIR,
     TOP_K_RESULTS
-)
-
-embedding_model = HuggingFaceEmbeddings(
-    model_name="all-MiniLM-L6-v2"
 )
 
 llm = ChatGroq(
