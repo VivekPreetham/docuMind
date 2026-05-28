@@ -16,8 +16,11 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: [
+
   "http://localhost:5173",
-  "https://documind-tan.vercel.app/"
+
+  "https://documind-tan.vercel.app"
+
     ],
   credentials: true
 }));
