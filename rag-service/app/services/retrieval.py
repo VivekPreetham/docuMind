@@ -6,7 +6,7 @@ from langchain_community.embeddings import (
     HuggingFaceEmbeddings
 )
 
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 
 from app.config import (
     FAISS_INDEX_DIR,
@@ -17,8 +17,14 @@ embedding_model = HuggingFaceEmbeddings(
     model_name="all-MiniLM-L6-v2"
 )
 
-llm = ChatOllama(
-    model="llama3"
+llm = ChatGroq(
+
+    groq_api_key=os.getenv(
+        "GROQ_API_KEY"
+    ),
+
+    model_name="llama-3.1-8b-instant"
+
 )
 
 
