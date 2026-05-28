@@ -143,6 +143,8 @@ exports.getDocuments = async (
 
 };
 
+const fs = require("fs");
+
 exports.deleteDocument = async (
   req,
   res
@@ -150,13 +152,43 @@ exports.deleteDocument = async (
 
   try {
 
+    const document =
+      await Document.findById(
+        req.params.id
+      );
+
+    if (!document) {
+
+      return res.status(404).json({
+
+        message: "Document not found"
+
+      });
+
+    }
+
+    // Delete uploaded PDF
+
+    if (
+      fs.existsSync(document.filePath)
+    ) {
+
+      fs.unlinkSync(
+        document.filePath
+      );
+
+    }
+
+    // Delete MongoDB document
+
     await Document.findByIdAndDelete(
       req.params.id
     );
 
     res.json({
 
-      message: "Document Deleted!"
+      message:
+        "Document Deleted Successfully"
 
     });
 

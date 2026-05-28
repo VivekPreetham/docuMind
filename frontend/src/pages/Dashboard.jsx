@@ -23,6 +23,36 @@ export default function Dashboard() {
         }
     };
 
+const deleteDocument = async (
+  id
+) => {
+
+  try {
+
+    await api.delete(
+      `/documents/${id}`
+    );
+
+    setDocuments((prev) =>
+
+      prev.filter(
+
+        (doc) => doc._id !== id
+
+      )
+
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Delete Failed");
+
+  }
+
+};
+
     useEffect(() => {
         fetchDocuments();
     }, []);
@@ -66,6 +96,15 @@ export default function Dashboard() {
                                 >
                                     Open Chat
                                 </Link>
+
+                                <button 
+                                    onClick={() =>
+                                        deleteDocument(doc._id)
+                                    }
+                                    className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg"
+                                >
+                                    Delete
+                                </button>
                             </div>
                         ))
                     }

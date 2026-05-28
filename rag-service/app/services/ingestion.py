@@ -6,7 +6,7 @@ from langchain_text_splitters import( RecursiveCharacterTextSplitter )
 
 from langchain_community.vectorstores import( FAISS )
 
-from langchain_community.embeddings import( HuggingFaceBgeEmbeddings )
+from langchain_community.embeddings import( HuggingFaceEmbeddings )
 
 from app.config import (
     FAISS_INDEX_DIR,
@@ -14,7 +14,7 @@ from app.config import (
     CHUNK_OVERLAP
 )
 
-embedding_model = HuggingFaceBgeEmbeddings(
+embedding_model = HuggingFaceEmbeddings(
     model_name="all-MiniLM-L6-v2"
 )
 

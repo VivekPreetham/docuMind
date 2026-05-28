@@ -4,94 +4,152 @@ import api from "../services/api";
 
 import MessageBubble from "./MessageBubble";
 
-export default function ChatBox({documentId}) {
-    
-    const [message, setMessage] = useState("");
+export default function ChatBox({
+  documentId
+}) {
 
-    const [messages, setMessages] = useState([]);
+  const [message, setMessage] =
+    useState("");
 
-    const sendMessage = async () => {
-        
-        if(!message) return;
+  const [messages, setMessages] =
+    useState([]);
 
-        const userMessage = {
-            role: "user",
-            content: message
-        };
+  const sendMessage = async () => {
 
-        setMessages((prev) => [
-            ...prev,
-            userMessage
-        ]);
+    if (!message.trim()) return;
 
-        try {
-            
-            const response = await api.post(
+    // User message
 
-                `/chat/${documentId}/message`,
+    const userMessage = {
 
-                { message }
+      role: "user",
 
-            );
+      content: message
 
-            const aiMessage = {
-                role: "assistant",
-                content: response.data.answer
-            };
-
-            setMessages((prev) => [
-                ...prev,
-                aiMessage
-            ]);
-
-            setMessages("");
-
-        } catch (error) {
-            console.log(error);
-
-            alert("Message Failed");
-            
-        }
     };
 
-    return (
-        <div className="bg-slate-800 rounded-xl p-6 shadow-lg h-[80vh] flex flex-col">
+    // Add user message safely
 
-            <div className="flex-1 overflow-y-auto mb-4">
+    setMessages((prev) => [
 
-                {
-                    messages.map((msg, index) => (
-                        <MessageBubble 
-                            key={index}
-                            role={msg.role}
-                            content={msg.content}
-                        />
-                    ))
-                }
-            </div>
+      ...prev,
 
-            <div className="flex gap-4">
+      userMessage
 
-                <input 
-                    value={message}
+    ]);
 
-                    onChange={(e) => 
-                        setMessage(e.target.value)
-                    }
+    try {
 
-                    placeholder="Ask anything about the document..."
+      const response =
+        await api.post(
 
-                    className="flex-1 bg-slate-700 p-4 rounded-lg outline-none"
-                />
+          `/chat/${documentId}/message`,
 
-                <button 
-                    onClick={sendMessage}
-                    className="bg-cyan-500 hover:bg-cyan-600 px-6 rounded-lg font-semibold"
-                >
-                    Send
-                </button>
-            </div>
+          { message }
 
-        </div>
-    );
+        );
+
+      console.log(
+        "AI RESPONSE:",
+        response.data
+      );
+
+      // AI message
+
+      const aiMessage = {
+
+        role: "assistant",
+
+        content:
+          response.data.answer ||
+
+          "No answer returned"
+
+      };
+
+      // Append AI message safely
+
+      setMessages((prev) => [
+
+        ...prev,
+
+        aiMessage
+
+      ]);
+
+      setMessage("");
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Message Failed");
+
+    }
+
+  };
+
+  return (
+
+    <div className="bg-slate-800 rounded-xl p-6 shadow-lg h-[80vh] flex flex-col">
+
+      <div className="flex-1 overflow-y-auto mb-4">
+
+        {
+
+          Array.isArray(messages)
+
+          &&
+
+          messages.map((msg, index) => (
+
+            <MessageBubble
+
+              key={index}
+
+              role={msg.role}
+
+              content={msg.content}
+
+            />
+
+          ))
+
+        }
+
+      </div>
+
+      <div className="flex gap-4">
+
+        <input
+
+          value={message}
+
+          onChange={(e) =>
+            setMessage(e.target.value)
+          }
+
+          placeholder="Ask anything about document..."
+
+          className="flex-1 bg-slate-700 p-4 rounded-lg outline-none"
+
+        />
+
+        <button
+
+          onClick={sendMessage}
+
+          className="bg-cyan-500 hover:bg-cyan-600 px-6 rounded-lg font-semibold"
+
+        >
+
+          Send
+
+        </button>
+
+      </div>
+
+    </div>
+
+  );
 }
