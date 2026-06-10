@@ -4,7 +4,7 @@ DocuMind is a full-stack Retrieval-Augmented Generation (RAG) application that e
 
 The platform combines semantic search, vector embeddings, FAISS indexing, and Large Language Models (LLMs) to deliver context-aware answers strictly grounded in uploaded document content.
 
-Built using React, Node.js, FastAPI, MongoDB Atlas, LangChain, FAISS, and Ollama-hosted Llama 3 models.
+Built using React, Node.js, FastAPI, MongoDB Atlas, LangChain, FAISS, Google Gemini Embeddings, and Groq-hosted Llama models.
 
 ---
 
@@ -14,7 +14,8 @@ Built using React, Node.js, FastAPI, MongoDB Atlas, LangChain, FAISS, and Ollama
 * AI-powered document chat using RAG
 * Semantic retrieval using vector embeddings
 * FAISS vector database integration
-* Ollama-hosted local LLM inference (Llama 3)
+* Groq-hosted LLM inference (Llama 3.1)
+* Google Gemini Embeddings API integration
 * JWT Authentication & Protected Routes
 * Chat session persistence
 * MongoDB Atlas integration
@@ -35,11 +36,11 @@ FastAPI RAG Service
         ↓
 PDF Extraction + Chunking
         ↓
-HuggingFace Embeddings
+Google Gemini Embeddings
         ↓
 FAISS Vector Store
         ↓
-Ollama (Llama 3)
+Groq (Llama 3.1)
         ↓
 Context-Aware AI Responses
 ```
@@ -70,9 +71,9 @@ Context-Aware AI Responses
 * LangChain
 * FAISS
 * PyMuPDF
-* HuggingFace Embeddings
-* Ollama
-* Llama 3
+* Google Gemini Embeddings API
+* Groq API
+* Llama 3.1
 
 ---
 
@@ -96,7 +97,7 @@ Context-Aware AI Responses
 
 ## 4. Embedding Generation
 
-* HuggingFace embedding models convert text chunks into vectors.
+* Google Gemini Embeddings API converts text chunks into vectors.
 * Vector embeddings are stored inside FAISS indexes.
 
 ## 5. Semantic Retrieval
@@ -106,7 +107,7 @@ Context-Aware AI Responses
 
 ## 6. AI Response Generation
 
-* Retrieved chunks are passed as context to Llama 3 through Ollama.
+* Retrieved chunks are passed as context to Groq-hosted Llama 3.1 models.
 * AI generates grounded responses only from uploaded document context.
 
 ## 7. Chat Persistence
@@ -225,20 +226,6 @@ http://localhost:8000
 
 ---
 
-# 5. Setup Ollama
-
-Install Ollama:
-
-https://ollama.com
-
-Run Llama 3:
-
-```bash
-ollama run llama3
-```
-
----
-
 # Environment Variables
 
 ## Backend (.env)
@@ -259,6 +246,10 @@ JWT_EXPIRES_IN=7d
 
 ```env
 FAISS_INDEX_DIR=./faiss_indexes
+
+GOOGLE_API_KEY=your_google_api_key
+
+GROQ_API_KEY=your_groq_api_key
 ```
 
 ---
@@ -292,7 +283,8 @@ FAISS_INDEX_DIR=./faiss_indexes
 Through this project, I gained hands-on experience in:
 
 * Retrieval-Augmented Generation (RAG)
-* LLM integration using Ollama
+* LLM integration using Groq
+* Cloud Embeddings using Google Gemini
 * Semantic search systems
 * Vector databases and FAISS
 * LangChain workflows
