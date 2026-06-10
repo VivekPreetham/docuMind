@@ -17,11 +17,7 @@ async def ingest(
     file: UploadFile = File(...),
     document_id: str = Form(...)
 ):
-    # FIX: was expecting JSON with pdf_path — Node can't send a
-    # local path that FastAPI can access (different servers).
-    # Now accepts the actual file as multipart upload.
 
-    # Save uploaded file to a temp location
     suffix = os.path.splitext(file.filename)[1] or ".pdf"
     with tempfile.NamedTemporaryFile(
         delete=False,
