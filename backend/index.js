@@ -23,7 +23,8 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-app.options("(.*)", cors()); 
+// REMOVED app.options line — not needed, app.use(cors()) above
+// already handles OPTIONS preflight for all routes
 
 app.get("/", (req, res) => {
   res.send("API Running");
