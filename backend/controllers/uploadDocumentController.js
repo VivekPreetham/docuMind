@@ -3,6 +3,8 @@ const Document = require(
 );
 
 const path = require("path");
+const fs = require("fs");                
+const FormData = require("form-data");   
 
 const {
   ingestPDF
@@ -29,8 +31,6 @@ exports.uploadDocument = async (
 
     const file = req.file;
 
-    // Create MongoDB document
-
     const document =
       await Document.create({
 
@@ -52,28 +52,27 @@ exports.uploadDocument = async (
 
       });
 
-    // Convert to absolute path
-
-    const absolutePath =
-      path.resolve(file.path);
-
-    console.log(
-      "Absolute PDF Path:",
-      absolutePath
+    const form = new FormData();
+    form.append(
+      "file",
+      fs.createReadStream(file.path),
+      {
+        filename: file.originalname,
+        contentType: "application/pdf"
+      }
+    );
+    form.append(
+      "document_id",
+      document._id.toString()
     );
 
-    // Call FastAPI ingestion
 
     const result =
       await ingestPDF(
-
-        absolutePath,
-
+        form,
         document._id.toString()
-
       );
 
-    // Update document
 
     document.chunkCount =
       result.chunk_count;
@@ -143,8 +142,6 @@ exports.getDocuments = async (
 
 };
 
-const fs = require("fs");
-
 exports.deleteDocument = async (
   req,
   res
@@ -167,8 +164,6 @@ exports.deleteDocument = async (
 
     }
 
-    // Delete uploaded PDF
-
     if (
       fs.existsSync(document.filePath)
     ) {
@@ -178,8 +173,6 @@ exports.deleteDocument = async (
       );
 
     }
-
-    // Delete MongoDB document
 
     await Document.findByIdAndDelete(
       req.params.id
