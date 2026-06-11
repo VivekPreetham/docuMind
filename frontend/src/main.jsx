@@ -8,6 +8,8 @@ import App from "./App";
 
 import "./index.css";
 
+// force rebuild
+
 ReactDOM.createRoot(
   document.getElementById("root")
 ).render(
